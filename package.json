@@ -4,6 +4,7 @@
   "description": "Slash command for slack. Fetch weather from Mountain Forecast",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Alexandre Rose",

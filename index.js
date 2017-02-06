@@ -14,11 +14,13 @@ consts.getApiKey(function(key) {
   // validate key
 });
 
+app.set('port', (process.env.PORT || 5000));
+
 var response;
 
 app.post('/', upload.array(), function(req, res) {
   var query = req.body.text;
-  console.log(query);
+
   Fetch.findPeak(query, function(err, mountain){
     if (err) {
       response = new Response(Response.ERROR);
@@ -81,8 +83,8 @@ app.post('/', upload.array(), function(req, res) {
       });
     });
   });
-
-
 });
 
-app.listen(8080);
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
