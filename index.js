@@ -24,7 +24,7 @@ app.get('/'), function(req, res) {
 };
 
 app.post('/', upload.array(), function(req, res) {
-  res.sendStatus(200);
+  res.send('');
   var query = req.body.text;
   var responseUrl = req.body.response_url;
 
