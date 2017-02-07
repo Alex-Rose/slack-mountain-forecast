@@ -20,13 +20,13 @@ app.set('port', (process.env.PORT || 5000));
 var response;
 
 app.get('/'), function(req, res) {
-  res.sendStatus(200);
+  res.send('');
 };
 
 app.post('/', upload.array(), function(req, res) {
-  res.sendStatus(200);
   var query = req.body.text;
   var responseUrl = req.body.response_url;
+  res.send('I\'m looking for \'' + query + '\'. Won\'t be long.');
 
   Fetch.findPeak(query, function(err, mountain){
     if (err) {
