@@ -20,7 +20,7 @@ app.set('port', (process.env.PORT || 5000));
 var response;
 
 app.get('/'), function(req, res) {
-  res.sendStatus(200);
+  res.send('');
 };
 
 app.post('/', upload.array(), function(req, res) {
