@@ -3,6 +3,7 @@ var Fetch = require('./fetch.js');
 var Response = require('./response.js');
 var Weather = require('./weather.js');
 var Post = require('./post.js');
+var settings = require('./settings.js');
 var express = require('express');
 var bodyParser = require('body-parser')
 var multer = require('multer'); // v1.0.5
@@ -25,6 +26,11 @@ app.get('/'), function(req, res) {
 
 app.post('/', upload.array(), function(req, res) {
   var query = req.body.text;
+
+  if (settings.debug) {
+    console.log(req.body);
+  }
+
   var responseUrl = req.body.response_url;
   res.send('I\'m looking for \'' + query + '\'. Won\'t be long.');
 
@@ -80,12 +86,24 @@ app.post('/', upload.array(), function(req, res) {
           response.setUrl(forecastUrl);
           response.setName(name);
           response.setCountry(country);
-          response.createGenericMessage();
-          response.attachWeather(weather, altitude);
+          response.setElevations(elevations);
 
-          var json = JSON.stringify(response.generate());
-          console.log(json);
-          Post(responseUrl, response.generate());
+          try {
+            response.createGenericMessage();
+            response.attachWeather(weather, altitude);
+
+            var json = JSON.stringify(response.generate());
+            console.log(json);
+            Post(responseUrl, response.generate());
+          } catch (error) {
+            console.log(error);
+            response = new Response(Response.ERROR);
+            response.setErrorMessage('I\'m sorry, I fell and could not self arrest...');
+            response.setErrorDetail(error.message);
+            console.log(JSON.stringify(response.generate()));
+            Post(responseUrl, response.generate());
+            return;
+          }
         });
       });
     });

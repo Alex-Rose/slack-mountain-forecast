@@ -8,6 +8,7 @@ Response = function(type) {
   this.name = undefined;
   this.country = undefined;
   this.attachments = [];
+  this.elevations = undefined;
   this.output = {};
 };
 
@@ -40,6 +41,10 @@ Response.prototype.createGenericMessage = function() {
 };
 
 Response.prototype.attachWeather = function(weather, altitude) {
+  if (!this.elevations) {
+    throw new Error('Must provide elevations');
+  }
+
   var att = {};
   var i = 0;
 
@@ -54,6 +59,25 @@ Response.prototype.attachWeather = function(weather, altitude) {
   fields = Response.pushNewField('Freezing level', weather.freezing[i] + ' m', fields);
   att['fields'] = fields;
   att['mrkdwn_in'] =  ['text'];
+
+  var actions = [];
+
+  for (var i = 0; i < 4 && i < this.elevations.length; i++) {
+    var altitude = this.elevations[i].split('/');
+    altitude = altitude[altitude.length - 1];
+    var style = (i == 0) ? 'primary': 'default';
+    var action = {
+      'name': 'elevation',
+      'text': altitude + ' m',
+      'type': 'button',
+      'style': style,
+      'value': this.elevations[i]
+    }
+
+    actions.push(action);
+  }
+
+  att['actions'] = actions;
 
   this.attachments.push(att);
 }
@@ -72,6 +96,10 @@ Response.prototype.setName = function(name) {
 
 Response.prototype.setCountry = function(country) {
   this.country = country;
+};
+
+Response.prototype.setElevations = function(elevations) {
+  this.elevations = elevations;
 };
 
 Response.prototype.generateError = function() {
