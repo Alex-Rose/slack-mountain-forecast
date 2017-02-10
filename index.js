@@ -32,6 +32,7 @@ app.post('/', upload.array(), function(req, res) {
   }
 
   var responseUrl = req.body.response_url;
+
   res.send('I\'m looking for \'' + query + '\'. Won\'t be long.');
 
   Fetch.findPeak(query, function(err, mountain){
